@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import font
-from tkinter import BOTH
 from tkinter import messagebox as m_box
+from tkinter import Menu
 import json
 from difflib import get_close_matches
 import cv2
@@ -17,8 +17,20 @@ class CreateWindow:
         self.master = master
         self.master.title("Dictionary")
 
-        self.image_path = "image.jpg"
+        # Creating a Menu Bar
 
+        self.menu_bar = Menu(master)
+        self.master.config(menu=self.menu_bar)
+
+        self.file_menu = Menu(self.menu_bar, tearoff=0)
+        self.file_menu.add_command(label="Exit", command=self._quit)
+        self.menu_bar.add_cascade(label="File", menu=self.file_menu)
+
+        self.help_menu = Menu(self.menu_bar, tearoff=0)
+        self.help_menu.add_command(label="About", command=self.about)
+        self.menu_bar.add_cascade(label="Help", menu=self.help_menu)
+
+        self.image_path = "image.jpg"
         self.cv_img = cv2.cvtColor(cv2.imread(self.image_path), cv2.COLOR_BGR2RGB)
 
         self.canvas = tk.Canvas(master, width=self.cv_img.shape[1], height=self.cv_img.shape[0])
@@ -33,10 +45,10 @@ class CreateWindow:
         # Creating Label frames
 
         self.labelframe1 = ttk.LabelFrame(self.master)
-        self.labelframe1.pack(fill=BOTH, expand=1)
+        self.labelframe1.pack(fill=tk.BOTH, expand=1)
 
         self.labelframe2 = ttk.LabelFrame(self.master)
-        self.labelframe2.pack(fill=BOTH, expand=1)
+        self.labelframe2.pack(fill=tk.BOTH, expand=1)
 
         # Tk Variable
         self.entered_word = tk.StringVar()
@@ -96,6 +108,14 @@ class CreateWindow:
                 for item in meanings:
                     output += '\n\n' + item
                 m_box.showinfo("...", f"{w.upper()} means -> {output}")
+
+    def _quit(self):
+        self.master.quit()
+        self.master.destroy()
+        exit()
+
+    def about(self):
+        m_box.showinfo('About', 'Created by : Anamitra Mukherjee')
 
 
 def main():
